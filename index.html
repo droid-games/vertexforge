@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vertex Forge Games – Mobile Game Publisher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── SCANLINE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 2px,
+        rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    #home::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(155,93,229,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(155,93,229,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    #home::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,107,43,0.18) 0%, transparent 70%);
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 860px; }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: var(--pixel-font);
+      font-size: 0.5rem;
+      color: var(--teal);
+      letter-spacing: 0.12em;
+      margin-bottom: 2rem;
+      border: 1px solid var(--teal);
+      padding: 0.4rem 1rem;
+    }
+    .hero-title {
+      font-family: var(--pixel-font);
+      font-size: clamp(1rem, 4vw, 2rem);
+      line-height: 1.8;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+    .hero-title .accent-red  { color: var(--red); }
+
+    /* glitch */
+    .glitch { position: relative; display: inline-block; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+    }
+    .glitch::before {
+      color: var(--teal);
+      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+      transform: translateX(-3px);
+      animation: glitch1 3.5s infinite linear;
+    }
+    .glitch::after {
+      color: var(--red);
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+      transform: translateX(3px);
+      animation: glitch2 3.5s infinite linear;
+    }
+    @keyframes glitch1 {
+      0%, 88%, 100% { transform: translateX(-3px); opacity: 1; }
+      90% { transform: translateX(4px) skewX(-2deg); opacity: 0.8; }
+      92% { transform: translateX(-2px); opacity: 1; }
+    }
+    @keyframes glitch2 {
+      0%, 88%, 100% { transform: translateX(3px); opacity: 1; }
+      90% { transform: translateX(-4px) skewX(2deg); opacity: 0.8; }
+      92% { transform: translateX(2px); opacity: 1; }
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 1.8rem auto 2.8rem;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .hero-sub strong { color: var(--white); font-weight: 600; }
+
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn-secondary {
+      font-family: var(--pixel-font);
+      font-size: 0.48rem;
+      padding: 0.9rem 1.8rem;
+      background: transparent;
+      color: var(--teal);
+      text-decoration: none;
+      border: 1px solid var(--teal);
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { background: rgba(155,93,229,0.1); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      margin-top: 4rem;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+    }
+    .stat { padding: 1.2rem 2.5rem; border-right: 1px solid var(--border); text-align: center; }
+    .stat:last-child { border-right: none; }
+    .stat-val { font-family: var(--pixel-font); font-size: 0.7rem; color: var(--teal); display: block; margin-bottom: 0.5rem; }
+    .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* ── ABOUT ── */
+    #about { padding: 7rem 2rem; background: var(--deep-navy); position: relative; }
+    .about-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .about-text p { font-size: 1rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.2rem; }
+    .about-text p strong { color: var(--white); }
+    .about-logo-box { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+    .pixel-emblem { width: 180px; height: 180px; }
+    .pixel-emblem svg { width: 100%; height: 100%; }
+    .about-info-cards { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
+    .info-card { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.2rem; background: var(--panel); border-left: 3px solid var(--teal); }
+    .info-card-icon { font-size: 1.1rem; }
+    .info-card-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
+    .info-card-val { font-size: 0.85rem; color: var(--white); font-weight: 600; }
+
+    /* ── GAMES ── */
+    #games { padding: 7rem 2rem; background: var(--black); }
+    .games-header { max-width: 1100px; margin: 0 auto 4rem; }
+    .games-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5px; background: var(--border); }
+    .game-card { background: var(--panel); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.25s; }
+    .game-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--teal); transition:height 0.35s ease; }
+    .game-card:hover { background: var(--panel2); }
+    .game-card:hover::before { height: 100%; }
+    .game-card:nth-child(2)::before { background: var(--red); }
+    .game-card:nth-child(3)::before { background: var(--gold); }
+    .game-card:nth-child(4)::before { background: var(--teal); }
+    .game-icon { font-size: 2.4rem; margin-bottom: 1.2rem; display: block; }
+    .game-card h3 { font-family: var(--pixel-font); font-size: 0.6rem; color: var(--white); margin-bottom: 1rem; line-height: 1.8; }
+    .game-card p { font-size: 0.92rem; color: var(--muted); line-height: 1.75; }
+    .game-tag { display: inline-block; margin-top: 1.2rem; font-size: 0.65rem; color: var(--teal); border: 1px solid currentColor; padding: 0.2rem 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .game-card:nth-child(2) .game-tag { color: var(--red); }
+    .game-card:nth-child(3) .game-tag { color: var(--gold); }
+    .games-cta { max-width: 1100px; margin: 2.5rem auto 0; text-align: center; }
+
+    /* ── POLICIES ── */
+    #policies { padding: 7rem 2rem; background: var(--deep-navy); }
+    .policies-inner { max-width: 1100px; margin: 0 auto; }
+    .policies-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3.5rem; }
+    .policy-card { background: var(--panel); padding: 2.2rem; border-top: 3px solid var(--border); position: relative; transition: border-color 0.2s, transform 0.2s; }
+    .policy-card:nth-child(1) { border-top-color: var(--teal); }
+    .policy-card:nth-child(2) { border-top-color: var(--red); }
+    .policy-card:nth-child(3) { border-top-color: var(--gold); }
+    .policy-card:hover { transform: translateY(-4px); }
+    .policy-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+    .policy-card h3 { font-family: var(--pixel-font); font-size: 0.55rem; color: var(--white); margin-bottom: 1.2rem; line-height: 1.8; }
+    .policy-card ul { list-style: none; margin-bottom: 1.5rem; }
+    .policy-card ul li { font-size: 0.85rem; color: var(--muted); padding: 0.3rem 0 0.3rem 1.1rem; position: relative; }
+    .policy-card ul li::before { content:'▸'; position:absolute; left:0; color:var(--teal); font-size:0.7rem; }
+    .policy-card:nth-child(2) ul li::before { color: var(--red); }
+    .policy-card:nth-child(3) ul li::before { color: var(--gold); }
+    .policy-link { font-family: var(--pixel-font); font-size: 0.42rem; color: var(--teal); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .policy-link:hover { color: var(--white); }
+    .policy-card:nth-child(2) .policy-link { color: var(--red); }
+    .policy-card:nth-child(3) .policy-link { color: var(--gold); }
+
+    /* ── CONTACT ── */
+    #contact { padding: 7rem 2rem; background: var(--black); position: relative; overflow: hidden; }
+    #contact::before { content:''; position:absolute; bottom:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(155,93,229,0.07) 0%, transparent 70%); }
+    .contact-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .contact-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 3rem 0; }
+    .contact-card { background: var(--panel); padding: 1.8rem; border: 1px solid var(--border); text-align: left; position: relative; overflow: hidden; }
+    .contact-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--teal), var(--red)); }
+    .contact-card-icon { font-size: 1.5rem; margin-bottom: 0.8rem; display: block; }
+    .contact-card-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .contact-card-val { font-size: 0.95rem; color: var(--white); font-weight: 600; }
+    .contact-note { font-size: 0.85rem; color: var(--muted); line-height: 1.7; background: var(--panel); border-left: 3px solid var(--gold); padding: 1rem 1.5rem; text-align: left; }
+
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .games-grid { grid-template-columns: 1fr; }
+      .policies-grid { grid-template-columns: 1fr; }
+      .contact-cards { grid-template-columns: 1fr; }
+      .hero-stats { flex-direction: column; border: none; gap: 0.5rem; }
+      .stat { border-right: none; border: 1px solid var(--border); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .glitch::before, .glitch::after { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">VERTEX<span>FORGE</span><br>GAMES</a>
+  <ul>
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="privacy-policy.html">Privacy</a></li>
+    <li><a href="terms.html">Terms</a></li>
+    <li><a href="refund-policy.html">Refund</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://play.google.com/store" class="nav-cta">▶ Play Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Mobile Game Publisher</span>
+    <h1 class="hero-title">
+      <span class="glitch" data-text="VERTEX FORGE">VERTEX FORGE</span><br>
+      <span class="accent-red">GAMES</span>
+    </h1>
+    <p class="hero-sub">
+      <strong>Forge your next obsession.</strong> We build bold, free Android games that are fast to load, fair to play, and impossible to put down.
+    </p>
+    <div class="hero-btns">
+      <a href="https://play.google.com/store" class="btn-primary">▶ Get Our Games</a>
+      <a href="#about" class="btn-secondary">Learn More</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-val">100%</span><span class="stat-label">Free to Play</span></div>
+      <div class="stat"><span class="stat-val">Android</span><span class="stat-label">Google Play</span></div>
+      <div class="stat"><span class="stat-val">All Ages</span><span class="stat-label">Family Friendly</span></div>
+      <div class="stat"><span class="stat-val">Zero</span><span class="stat-label">Pay-to-Win</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-label">// About Us</p>
+      <h2 class="section-title">Who We Are</h2>
+      <p><strong>Vertex Forge Games</strong> is an independent mobile game studio forging sharp, skill-driven games for Android players who demand more from their screen time.</p>
+      <p>We believe great games belong to everyone. Every title we ship is <strong>free to download</strong>, fair by design, and built to keep you coming back — not because of tricks, but because the gameplay earns it.</p>
+      <p>Every game we publish goes through rigorous testing for smooth performance and fair play. New titles are always in the forge — follow us on Google Play to stay ahead.</p>
+    </div>
+    <div class="about-logo-box">
+      <div class="pixel-emblem">
+        <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="20" width="120" height="100" fill="#1c1c2a" rx="0"/>
+          <polygon points="30,120 90,160 150,120" fill="#1c1c2a"/>
+          <rect x="30" y="20" width="120" height="100" fill="none" stroke="#9b5de5" stroke-width="3"/>
+          <polygon points="30,120 90,160 150,120" fill="none" stroke="#9b5de5" stroke-width="3"/>
+          <rect x="65" y="42" width="50" height="10" fill="#ff6b2b"/>
+          <rect x="82" y="52" width="16" height="48" fill="#ff6b2b"/>
+          <rect x="65" y="100" width="50" height="10" fill="#ff6b2b"/>
+          <rect x="38" y="28" width="8" height="8" fill="#9b5de5"/>
+          <rect x="134" y="28" width="8" height="8" fill="#9b5de5"/>
+          <rect x="38" y="108" width="8" height="8" fill="#9b5de5"/>
+          <rect x="134" y="108" width="8" height="8" fill="#9b5de5"/>
+          <rect x="70" y="135" width="40" height="18" fill="#ffbe0b" rx="0"/>
+          <rect x="78" y="130" width="4" height="28" fill="#ffbe0b"/>
+          <rect x="98" y="130" width="4" height="28" fill="#ffbe0b"/>
+          <rect x="86" y="130" width="8" height="8" fill="#1c1c2a"/>
+          <rect x="86" y="150" width="8" height="8" fill="#1c1c2a"/>
+        </svg>
+      </div>
+      <div class="about-info-cards">
+        <div class="info-card"><span class="info-card-icon">🎮</span><div><div class="info-card-label">Publisher</div><div class="info-card-val">Vertex Forge Games</div></div></div>
+        <div class="info-card"><span class="info-card-icon">📧</span><div><div class="info-card-label">Email</div><div class="info-card-val">vertexforgegames@gmail.com</div></div></div>
+        <div class="info-card"><span class="info-card-icon">📱</span><div><div class="info-card-label">Platform</div><div class="info-card-val">Google Play — Android</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="games-header">
+    <p class="section-label">// Our Games</p>
+    <h2 class="section-title">Games We Publish</h2>
+  </div>
+  <div class="games-grid">
+    <div class="game-card">
+      <span class="game-icon">🕹️</span>
+      <h3>Arcade Games</h3>
+      <p>Blazing fast action titles built to test your reflexes and shatter your high score. Every session is a new challenge.</p>
+      <span class="game-tag">Fast-Paced</span>
+    </div>
+    <div class="game-card">
+      <span class="game-icon">🧩</span>
+      <h3>Casual Games</h3>
+      <p>Instantly approachable, endlessly replayable. Perfect for a five-minute session or a five-hour binge — you decide the pace.</p>
+      <span class="game-tag">Pick Up & Play</span>
+    </div>
+    <div class="game-card">
+      <span class="game-icon">⚡</span>
+      <h3>Action Games</h3>
+      <p>Heart-pounding gameplay that demands your full focus. Built for players who want stakes with every tap and swipe.</p>
+      <span class="game-tag">High Energy</span>
+    </div>
+    <div class="game-card">
+      <span class="game-icon">🎯</span>
+      <h3>Puzzle Games</h3>
+      <p>Brain-teasing, satisfying challenges designed to make you think, then reward you for it. Logic never felt this fun.</p>
+      <span class="game-tag">Mind-Bending</span>
+    </div>
+  </div>
+  <div class="games-cta">
+    <a href="https://play.google.com/store" class="btn-primary">▶ View All Games on Google Play</a>
+  </div>
+</section>
+
+<!-- POLICIES -->
+<section id="policies">
+  <div class="policies-inner">
+    <p class="section-label">// Legal</p>
+    <h2 class="section-title">Our Policies</h2>
+    <div class="policies-grid">
+      <div class="policy-card">
+        <span class="policy-icon">🔒</span>
+        <h3>Privacy Policy</h3>
+        <ul>
+          <li>What data we collect</li>
+          <li>How ads &amp; in-app purchases work</li>
+          <li>Children's privacy (under 13)</li>
+          <li>Your data rights</li>
+        </ul>
+        <a href="privacy-policy.html" class="policy-link">Read Full Privacy Policy →</a>
+      </div>
+      <div class="policy-card">
+        <span class="policy-icon">📋</span>
+        <h3>Terms &amp; Conditions</h3>
+        <ul>
+          <li>Licence to use our games</li>
+          <li>In-app purchase rules</li>
+          <li>Advertising terms</li>
+          <li>User conduct guidelines</li>
+        </ul>
+        <a href="terms.html" class="policy-link">Read Full Terms &amp; Conditions →</a>
+      </div>
+      <div class="policy-card">
+        <span class="policy-icon">💳</span>
+        <h3>Refund Policy</h3>
+        <ul>
+          <li>Google Play 48-hour refund window</li>
+          <li>Eligible refund situations</li>
+          <li>How to request a refund</li>
+          <li>Unauthorised purchases by minors</li>
+        </ul>
+        <a href="refund-policy.html" class="policy-link">Read Full Refund Policy →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label">// Get In Touch</p>
+    <h2 class="section-title">Contact Us</h2>
+    <p style="color:var(--muted);font-size:1rem;line-height:1.7;margin-bottom:1rem;">Got a question about one of our games, need support, or just want to say hello? We're always happy to hear from players.</p>
+    <div class="contact-cards">
+      <div class="contact-card"><span class="contact-card-icon">🏢</span><div class="contact-card-label">Publisher</div><div class="contact-card-val">Vertex Forge Games</div></div>
+      <div class="contact-card"><span class="contact-card-icon">📧</span><div class="contact-card-label">Email</div><div class="contact-card-val">vertexforgegames@gmail.com</div></div>
+      <div class="contact-card"><span class="contact-card-icon">📱</span><div class="contact-card-label">Platform</div><div class="contact-card-val">Google Play — Android</div></div>
+      <div class="contact-card"><span class="contact-card-icon">⏱️</span><div class="contact-card-label">Response Time</div><div class="contact-card-val">Within 2–3 Business Days</div></div>
+    </div>
+    <div class="contact-note">For in-game issues or bug reports, please include your device model and Android version in your message — it helps us resolve things faster.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">VERTEX<span>FORGE</span><br>GAMES</a>
+    <div class="footer-links">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="refund-policy.html">Refund Policy</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <span class="footer-copy">© 2025 Vertex Forge Games. All rights reserved.</span>
+  </div>
+</footer>
+
+</body>
+</html>
